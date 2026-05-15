@@ -23,6 +23,10 @@ dependencies {
 // Source: https://mvnrepository.com/artifact/org.nocrala.tools.texttablefmt/text-table-formatter
     implementation 'org.nocrala.tools.texttablefmt:text-table-formatter:1.2.4'
 
+    // Source: https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation 'org.postgresql:postgresql:42.7.11'
+
+
 }
 
 test {

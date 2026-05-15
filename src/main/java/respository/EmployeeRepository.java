@@ -6,7 +6,8 @@ import model.Employee;
 import java.util.List;
 
 public class EmployeeRepository {
-    private final EmployeeDb employeeDb;
+
+     private final EmployeeDb employeeDb;
 
     //tor tea ke bos data mean employeeDb ban EmployeeRepository work
     public EmployeeRepository(EmployeeDb employeeDb){
@@ -28,4 +29,10 @@ public class EmployeeRepository {
                 .stream()
                 .anyMatch(emp ->emp.getId().equals(id));
     }
+
+
+
+
+
+
 }

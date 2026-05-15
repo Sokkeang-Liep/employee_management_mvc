@@ -2,6 +2,7 @@ package service.impl;
 
 import dto.EmployeeCreateRequest;
 import dto.EmployeeResponse;
+import dto.EmployeeUpdateRequest;
 import exceptions.EmployeeException;
 import mapper.EmployeeMapper;
 import model.Employee;
@@ -45,7 +46,43 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse findById(Long id) {
-        return repository.finalAll().stream().map(mapper::toEmployeeResponse).findFirst().orElseThrow(()-> new RuntimeException("Id not found!"));
+
+        Employee employee = repository.finalAll()
+                .stream()
+                .filter(emp -> emp.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Id not found!"));
+
+        return mapper.toEmployeeResponse(employee);
+    }
+
+    @Override
+    public EmployeeResponse updateEmployee(Long id, EmployeeUpdateRequest request) {
+
+        Employee employee = repository.finalAll()
+                .stream()
+                .filter(e -> e.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Employee not found!"));
+
+        employee.setFirstName(request.firstName());
+        employee.setLastName(request.lastName());
+        employee.setSalary(request.salary());
+        employee.setHireDate(request.hireDate());
+
+        return mapper.toEmployeeResponse(employee);
+    }
+
+    @Override
+    public void deleteEmployee(Long request) throws EmployeeException {
+
+        Employee employee = repository.finalAll()
+                .stream()
+                .filter(emp -> emp.getId().equals(request))
+                .findFirst()
+                .orElseThrow(() -> new EmployeeException("Employee not found!"));
+
+        repository.finalAll().remove(employee);
     }
 
 

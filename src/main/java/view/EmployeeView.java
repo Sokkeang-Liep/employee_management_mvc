@@ -75,7 +75,7 @@ public class EmployeeView {
 
     public Long inputId(){
         while (true){
-            System.out.println("[+] Input Id : ");
+            System.out.print("[+] Input Id : ");
             try {
                 return Long.parseLong(scanner.nextLine());
             }catch (NumberFormatException e){
@@ -93,8 +93,9 @@ public class EmployeeView {
                 3) Get All mployees
                 4) Get Employee By Id
                 5) Delete Employee 
+                ===============================================
                 """);
-        System.out.println("[=] Choose an option (1-5) : ");
+        System.out.print("[+] Choose an option (1-5) : ");
         return  Integer.parseInt(scanner.nextLine());
     }
 

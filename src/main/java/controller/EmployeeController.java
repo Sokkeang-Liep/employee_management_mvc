@@ -2,6 +2,7 @@ package controller;
 
 import dto.EmployeeCreateRequest;
 import dto.EmployeeResponse;
+import dto.EmployeeUpdateRequest;
 import exceptions.EmployeeException;
 import service.EmployeeService;
 import view.EmployeeView;
@@ -20,9 +21,28 @@ public class EmployeeController {
         EmployeeResponse response = service.createEmployee(request);
         view.displayEmployeeResponse(response,"Created Employee");
     }
-    public void update(){
+    public void update() {
+        try {
+            Long id = view.inputId();
+            service.findById(id);
+            EmployeeCreateRequest createRequest = view.createEmployee();
 
+            EmployeeUpdateRequest request = new EmployeeUpdateRequest(
+                    createRequest.firstName(),
+                    createRequest.lastName(),
+                    createRequest.salary(),
+                    createRequest.hireDate()
+            );
+
+            EmployeeResponse response = service.updateEmployee(id, request);
+
+            view.displayEmployeeResponse(response, "Updated Employee");
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
+
     public void getAll(){
         try {
             view.displayTableEmployee(
@@ -41,8 +61,21 @@ public class EmployeeController {
             System.out.println(e.getMessage());
         }
     }
-    public void delete(){
 
+
+    public void delete() {
+        try {
+            // input id from user
+            Long id = view.inputId();
+
+            // call service delete
+            service.deleteEmployee(id);
+
+            System.out.println("Employee deleted successfully!");
+
+        } catch (EmployeeException e) {
+            System.out.println(e.getMessage());
+        }
     }
     public void start(){
         while (true){
