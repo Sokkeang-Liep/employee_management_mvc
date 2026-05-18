@@ -7,6 +7,8 @@ import exceptions.EmployeeException;
 import service.EmployeeService;
 import view.EmployeeView;
 
+import java.util.List;
+
 public class EmployeeController {
     private final EmployeeView view;
     private final EmployeeService service;
@@ -17,81 +19,57 @@ public class EmployeeController {
     }
 
     public void create() {
-       EmployeeCreateRequest request = view.createEmployee();
+
+        EmployeeCreateRequest request = view.createEmployee();
+
         EmployeeResponse response = service.createEmployee(request);
-        view.displayEmployeeResponse(response,"Created Employee");
-    }
-    public void update() {
-        try {
-            Long id = view.inputId();
-            service.findById(id);
-            EmployeeCreateRequest createRequest = view.createEmployee();
 
-            EmployeeUpdateRequest request = new EmployeeUpdateRequest(
-                    createRequest.firstName(),
-                    createRequest.lastName(),
-                    createRequest.salary(),
-                    createRequest.hireDate()
-            );
+        view.displayEmployeeResponse(response, "Created Employee");
 
-            EmployeeResponse response = service.updateEmployee(id, request);
-
-            view.displayEmployeeResponse(response, "Updated Employee");
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
-    public void getAll(){
-        try {
-            view.displayTableEmployee(
-                    service.getAllEmployees()
-            );
-        }catch (EmployeeException e){
-            System.out.println(e.getMessage());
-        }
-    }
-    public void getById(){
-        try {
-            Long id = view.inputId();
-            EmployeeResponse employeeResponse = service.findById(id);
-            view.displayEmployeeResponse(employeeResponse,"Employee Detail");
-        }catch (RuntimeException e){
-            System.out.println(e.getMessage());
-        }
+    public void update() {}
+
+    public void getAll() {
+
+        List<EmployeeResponse> responseList = service.getAllEmployees();
+
+        view.displayTableEmployee(responseList);
+
     }
 
+    public void getById() {
+        Long id = view.inputId();
 
-    public void delete() {
-        try {
-            // input id from user
-            Long id = view.inputId();
+        EmployeeResponse response = service.getEmployeeById(id);
 
-            // call service delete
-            service.deleteEmployee(id);
-
-            System.out.println("Employee deleted successfully!");
-
-        } catch (EmployeeException e) {
-            System.out.println(e.getMessage());
-        }
+        view.displayEmployeeResponse(response, "Employee Details");
     }
-    public void start(){
-        while (true){
-            Integer opt = view.showMenuAndGetOption();
-            switch (opt){
-                case 1->create();
-                case 2->update();
-                case 3->getAll();
-                case 4-> getById();
-                case 5 -> delete();
-                case 0 -> {
-                    System.out.println("Exiting...!");
-                    System.exit(0);
+
+    public void delete() {}
+
+    public void start() {
+        while (true) {
+            int option = view.showMenuAndGetOption();
+            if (option == 0) {
+                System.out.println("!! Exiting...");
+                System.exit(0);
+            }
+            switch (option) {
+                case 1 -> create();
+                case 2 -> update();
+                case 3 -> getAll();
+                case 4 -> {
+                    try {
+                        getById();
+                    } catch (EmployeeException e) {
+                        System.out.println("Info: " + e.getMessage());
+                    }
                 }
-                default -> System.out.println("Invalid Option!");
+                case 5 -> delete();
+                default -> System.out.println("! Invalid Option.");
             }
         }
     }
+
 }

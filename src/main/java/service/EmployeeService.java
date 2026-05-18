@@ -24,4 +24,6 @@ public interface EmployeeService {
 
     //delete by id
     void deleteEmployee(Long request) throws EmployeeException;
+
+    EmployeeResponse getEmployeeById(Long id);
 }
