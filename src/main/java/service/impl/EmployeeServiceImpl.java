@@ -108,33 +108,48 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeResponse> getAllEmployees()
             throws EmployeeException {
 
-        List<Employee> employees =
-                repository.findAll();
-
-        if (employees.isEmpty()) {
-            throw new EmployeeException(
-                    "No employees found.");
+        if (repository.findAll().isEmpty()) {
+            throw new EmployeeException("No data yet.");
         }
 
-        return employees.stream()
+        return repository.findAll()
+                .stream()
                 .map(mapper::toEmployeeResponse)
                 .toList();
     }
 
-
-    @Override
-    public EmployeeResponse findById(Long id) throws EmployeeException {
-        return null;
-    }
-
     @Override
     public EmployeeResponse updateEmployee(Long id, EmployeeUpdateRequest request) throws EmployeeException {
-        return null;
+        Employee employee = repository.findAll()
+                .stream()
+                .filter(emp -> emp.getId().equals(id))
+                .findFirst()
+                .orElseThrow(
+                        () -> new EmployeeException("Employee Not Found")
+                );
+
+        employee.setFirstName(request.firstName());
+        employee.setLastName(request.lastName());
+        employee.setSalary(request.salary());
+        employee.setHireDate(request.hireDate());
+
+        Employee updatedEmployee = repository.update(employee);
+
+        return mapper.toEmployeeResponse(updatedEmployee);
     }
 
-    @Override
-    public void deleteEmployee(Long request) throws EmployeeException {
 
+    @Override
+    public void deleteEmployee(Long id) throws EmployeeException {
+        Employee employee = repository.findAll()
+                .stream()
+                .filter(emp -> emp.getId().equals(id))
+                .findFirst()
+                .orElseThrow(
+                        () -> new EmployeeException("Employee Not Found")
+                );
+
+        repository.delete(id);
     }
 
     @Override

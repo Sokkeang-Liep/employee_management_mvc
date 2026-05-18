@@ -2,6 +2,7 @@ package view;
 
 import dto.EmployeeCreateRequest;
 import dto.EmployeeResponse;
+import dto.EmployeeUpdateRequest;
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.Table;
 
@@ -66,6 +67,21 @@ public class EmployeeView {
                 System.out.println("Invalid Double value. Try again.");
             }
         }
+    }
+    public EmployeeUpdateRequest updateEmployee() {
+        System.out.println("=== [[ Employee Update ]] ===");
+
+        String firstName = getStringInput(scanner, "[+] Input First Name: ");
+
+        String lastName = getStringInput(scanner, "[+] Input Last Name: ");
+
+        Double salary = getDoubleInput(scanner, "[+] Input Salary: ");
+
+        LocalDate hireDate = getDateTimeInput(scanner, "[+] Input Hire Date(yyyy-MM-dd): ");
+
+        return new EmployeeUpdateRequest(
+                firstName, lastName, salary, hireDate
+        );
     }
 
     private LocalDate getDateTimeInput(Scanner sc, String context) {

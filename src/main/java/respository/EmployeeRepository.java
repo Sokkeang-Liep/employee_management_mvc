@@ -1,7 +1,6 @@
 package respository;
 
 import config.DbConnection;
-import database.EmployeeDb;
 import model.Employee;
 
 import java.sql.*;
@@ -35,17 +34,50 @@ public class EmployeeRepository {
 
 
 
+//    public List<Employee> findAll() {
+//        List<Employee> emps = new ArrayList<>();
+//
+//        String sql = "select * from employees";
+//
+//       try( Connection conn = DbConnection.getConnection();
+//       PreparedStatement preparedStatement = conn.prepareStatement(sql);
+//       ResultSet resultSet = preparedStatement.executeQuery()){
+//
+//           while (resultSet.next()){
+//               Employee singleRecord = new Employee();
+//               singleRecord.setId(resultSet.getLong("id"));
+//               singleRecord.setFirstName(resultSet.getString("first_name"));
+//               singleRecord.setLastName(resultSet.getString("last_name"));
+//               singleRecord.setSalary(resultSet.getDouble("salary"));
+//               singleRecord.setHireDate(
+//                       resultSet.getDate("hire_date").toLocalDate()
+//               );
+//               return emps;
+//           }
+//
+//       } catch (SQLException e){
+//           System.out.println("Error find all.");
+//
+//       }
+//       return null;
+//    }
+
     public List<Employee> findAll() {
+
         List<Employee> emps = new ArrayList<>();
 
-        String sql = "select * from employees";
+        String sql = "SELECT * FROM public.employees";
 
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (
+                Connection conn = DbConnection.getConnection();
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery()
+        ) {
 
             while (resultSet.next()) {
+
                 Employee singleRecord = new Employee();
+
                 singleRecord.setId(resultSet.getLong("id"));
                 singleRecord.setFirstName(resultSet.getString("first_name"));
                 singleRecord.setLastName(resultSet.getString("last_name"));
@@ -58,9 +90,11 @@ public class EmployeeRepository {
             }
 
         } catch (SQLException e) {
+
             System.out.println("Error find all.");
             e.printStackTrace();
         }
+
         return emps;
     }
 
@@ -96,6 +130,53 @@ public class EmployeeRepository {
         }
 
         return singleRecord;
+    }
+
+    public Employee update(Employee employee) {
+
+        String sql = """
+            UPDATE employees
+            SET first_name = ?,
+                last_name = ?,
+                salary = ?,
+                hire_date = ?
+            WHERE id = ?
+            """;
+
+        try (
+                Connection conn = DbConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setString(1, employee.getFirstName());
+            ps.setString(2, employee.getLastName());
+            ps.setDouble(3, employee.getSalary());
+            ps.setDate(4, java.sql.Date.valueOf(employee.getHireDate()));
+            ps.setLong(5, employee.getId());
+
+            ps.executeUpdate();
+            return employee;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void delete(Long id) {
+
+        String sql = "DELETE FROM employees WHERE id = ?";
+
+        try (
+                Connection conn = DbConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

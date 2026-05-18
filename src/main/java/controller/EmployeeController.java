@@ -28,7 +28,16 @@ public class EmployeeController {
 
     }
 
-    public void update() {}
+    public void update() {
+
+        Long id = view.inputId();
+
+        EmployeeUpdateRequest request = view.updateEmployee();
+
+        EmployeeResponse response = service.updateEmployee(id, request);
+
+        view.displayEmployeeResponse(response, "Updated Employee");
+    }
 
     public void getAll() {
 
@@ -46,7 +55,13 @@ public class EmployeeController {
         view.displayEmployeeResponse(response, "Employee Details");
     }
 
-    public void delete() {}
+    public void delete() {
+        Long id = view.inputId();
+
+        service.deleteEmployee(id);
+
+        System.out.println("Employee deleted successfully.");
+    }
 
     public void start() {
         while (true) {
